@@ -62,8 +62,8 @@ func totalStrength(strength []int) int {
 	for i := range strength {
 		left := i - leftBound[i]
 		right := rightBound[i] - i
-        sum := prefixSum[rightBound[i]] - prefixSum[leftBound[i]] + strength[rightBound[i]]
-//		repeats := (left + 1) * (right + 1)
+		sum := prefixSum[rightBound[i]] - prefixSum[leftBound[i]] + strength[rightBound[i]]
+		//		repeats := (left + 1) * (right + 1)
 		total += int64(repeats * strength[i] * sum)
 		fmt.Println(i, "->", strength[i], "(", left, ",", right, ")", "sum", sum, "times", repeats)
 		for total > MOD {

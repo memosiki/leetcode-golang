@@ -71,6 +71,7 @@ func sumSubarrayMins(arr []int) int {
 
 	return int(total)
 }
+
 //
 //func main() {
 //	a := sumSubarrayMins(
