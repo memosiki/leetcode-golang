@@ -1,297 +1,206 @@
 package main
 
-import "fmt"
-
-const swine = `
-▓▓▓▓▓▓▓▓▓▒▒▒▓▓▓▓▓▓▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒
-▓▓▓▓▓▓▓▓▓▒▒▒▒▓▓▓▓▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-▓█▓▓▓▓▓▓▓▒▒▒▒▓▓▓▓▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-▓███▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-▓█████▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-▓██████▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-▓████▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒
-▓███▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒
-▓███▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▓██▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▓██▓▓▓▒▒▒▒▒▒▒▓▓▓▒▒▓▓▓▓▓▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▓██▓▓▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▓▓▓▒▒▒▒▒▒▒▓▓▓▒
-▓█▓▓▒▒▒▒▒▒▒▒▒▒▓▓▓▓██▓▓▓▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▓▓▓▓▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▓▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▒
-▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░▒▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓███▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓█████████████████▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓████████████▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▓▒▒▒▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▒▓▓
-▓▒▒▒▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▒▒▒▒▒▒▒▒░▒▓▓▓▓▓▓▒▒▒▓
-▓▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▒▓▒▒▒▒▒▒▒▓▓▓▒▒▒▒▓▓▓
-`
+import (
+	"fmt"
+	"log"
+	"strconv"
+)
 
 type (
-	Token interface {
-		String() string
-		Int() int
+	Token struct {
+		kind  TokenKind
+		value TokenValue
 	}
-	OperationToken int
-	BracketToken   int
-	NumericToken   int
+	TokenKind  byte
+	TokenValue int
 )
 
 const (
-	openBracket  BracketToken = iota
-	closeBracket BracketToken = iota
+	bracket TokenKind = iota
+	numeric
+	operation
+)
+const (
+	openBracket TokenValue = iota
+	closeBracket
 
-	plus       OperationToken = iota
-	minus      OperationToken = iota
-	unaryMinus OperationToken = iota
+	plus
+	minus
+	mul
+	div
 )
 
-func (op OperationToken) String() string {
-	return operationsTokenToString[op]
-}
-func (b BracketToken) String() string {
-	return parenthesesTokenToString[b]
-
-}
-func (n NumericToken) String() string {
-	return fmt.Sprint(int(n))
-}
-func (n NumericToken) Int() int {
-	return int(n)
-}
-func (op OperationToken) Int() int {
-	if op == minus || op == unaryMinus {
-		return -1
+var (
+	precedence = map[TokenValue]int{
+		mul:   1,
+		div:   1,
+		plus:  0,
+		minus: 0,
 	}
-	return 1
-}
-func (b BracketToken) Int() int {
-	panic(b)
+	do = map[TokenValue]func(TokenValue, TokenValue) TokenValue{
+		mul:   func(b, a TokenValue) TokenValue { return a * b },
+		div:   func(b, a TokenValue) TokenValue { return a / b },
+		plus:  func(b, a TokenValue) TokenValue { return a + b },
+		minus: func(b, a TokenValue) TokenValue { return a - b },
+	}
+	translate = map[TokenKind]map[byte]TokenValue{
+		numeric: {
+			'0': 0,
+			'1': 1,
+			'2': 2,
+			'3': 3,
+			'4': 4,
+			'5': 5,
+			'6': 6,
+			'7': 7,
+			'8': 8,
+			'9': 9,
+		},
+		operation: {
+			'+': plus,
+			'-': minus,
+			'*': mul,
+			'/': div,
+		},
+		bracket: {
+			'(': openBracket,
+			')': closeBracket,
+		},
+	}
+	untranslate = map[TokenValue]string{
+		plus:         "+",
+		minus:        "-",
+		mul:          "*",
+		div:          "/",
+		openBracket:  "(",
+		closeBracket: ")",
+	}
+)
+
+func (token Token) String() string {
+	if token.kind == numeric {
+		return strconv.Itoa(int(token.value))
+	}
+	return untranslate[token.value]
 }
 
-func isDigit(char byte) bool {
-	_, ok := digitByteToToken[char]
-	return ok
-}
-func isParenthesis(char byte) bool {
-	_, ok := parenthesisByteToToken[char]
-	return ok
-}
-func isOperation(char byte) bool {
-	_, ok := operationByteToToken[char]
-	return ok
-}
-func toOperation(char byte) OperationToken {
-	val, _ := operationByteToToken[char]
-	return val
-}
-
-func toParenthesis(char byte) BracketToken {
-	val, _ := parenthesisByteToToken[char]
-	return val
-}
-func toNumber(char byte) NumericToken {
-	return NumericToken(char - "0"[0])
-}
-
-var tokenConversion = map[Token][]Token{
-	minus: {plus, unaryMinus},
+func ofAKind(char byte, kind TokenKind) (ok bool) {
+	_, ok = translate[kind][char]
+	return
 }
 
 func tokenize(s string) (tokens []Token) {
-	var prevToken Token = nil
-	var atStart = true
 	for i := 0; i < len(s); i++ {
-		char := s[i]
-		switch {
-
-		case isDigit(char):
-			num := 0
-			for ; i < len(s); i++ {
-				char := s[i]
-
-				if isDigit(char) {
-					num = num*10 + toNumber(char).Int()
-				} else {
-					break
-				}
+		switch char := s[i]; {
+		case ofAKind(char, numeric):
+			var num TokenValue = 0
+			for ; i < len(s) && ofAKind(s[i], numeric); i++ {
+				num = num*10 + translate[numeric][s[i]]
 			}
-			tokens = append(tokens, NumericToken(num))
 			i--
-		case char == " "[0]:
-		case isOperation(char):
-			op := toOperation(char)
-			if op == minus {
-				if atStart {
-					tokens = append(tokens, unaryMinus)
-				} else if _, ok := prevToken.(OperationToken); ok {
-					tokens = append(tokens, unaryMinus)
-				} else if val, ok := prevToken.(BracketToken); ok && val == openBracket {
-					tokens = append(tokens, unaryMinus)
-				} else {
-					for _, token := range tokenConversion[op] {
-						tokens = append(tokens, token)
-					}
-				}
-			} else {
-				tokens = append(tokens, plus)
-
+			tokens = append(tokens, Token{numeric, num})
+		case ofAKind(char, operation):
+			value := translate[operation][char]
+			// resolve unary minus
+			if value == minus && (len(tokens) == 0 ||
+				tokens[len(tokens)-1].kind == operation ||
+				(tokens[len(tokens)-1].kind == bracket && tokens[len(tokens)-1].value == openBracket)) {
+				tokens = append(tokens, Token{numeric, 0})
 			}
-		case isParenthesis(char):
-			tokens = append(tokens, toParenthesis(char))
+			tokens = append(tokens, Token{operation, value})
+		case ofAKind(char, bracket):
+			tokens = append(tokens, Token{bracket, translate[bracket][char]})
+		case char == ' ':
+			// noop
 		default:
-			panic(char)
+			log.Panicln("Invalid symbol", char)
 		}
-		if len(tokens) > 0 {
-			prevToken = tokens[len(tokens)-1]
-		}
-		atStart = false
 	}
 	return
 }
 
-type Stack []Token
-
-func (s Stack) Push(v Token) Stack {
-	return append(s, v)
-}
-
-func (s Stack) Pop() (Stack, Token) {
-	return s[:len(s)-1], s[len(s)-1]
-}
-
-type StackOp []OperationToken
-
-func (s StackOp) Push(v OperationToken) StackOp {
-	return append(s, v)
-}
-
-func (s StackOp) Pop() (StackOp, OperationToken) {
-	return s[:len(s)-1], s[len(s)-1]
-}
-func calcInfix(tokens []Token) int {
-	var args Stack
-	var operand StackOp
-	var arg1, arg2 Token
-	var op OperationToken
-	var consume = func() {
-		//		fmt.Println("args", args, "oper", operand)
-		if len(operand) == 0 {
-			return
-		}
-		args, arg1 = args.Pop()
-		num1, ok1 := arg1.(NumericToken)
-		operand, op = operand.Pop()
-		unary := op == unaryMinus
-		if unary {
-			if ok1 {
-				args = args.Push(NumericToken(op.Int() * num1.Int()))
-				fmt.Println("#", op, arg1, "=", args[len(args)-1])
-			} else {
-				args = args.Push(arg1)
-				operand = operand.Push(op)
-			}
-		} else {
-			if len(args) == 0 {
-				panic("impossible")
-			}
-			args, arg2 = args.Pop()
-			num2, ok2 := arg2.(NumericToken)
-			if ok1 && ok2 {
-				args = args.Push(NumericToken(num2.Int() + op.Int()*num1.Int()))
-				fmt.Println("#", arg2, op, arg1, "=", args[len(args)-1])
-			} else {
-				args = args.Push(arg2)
-				args = args.Push(arg1)
-				operand = operand.Push(op)
-			}
-		}
-	}
+func convertPostfix(tokens []Token) (postfix []Token) {
+	var stack Stack
 	for _, token := range tokens {
-		switch token.(type) {
-		case NumericToken:
-			args = append(args, token)
-		case OperationToken:
-			operand = append(operand, token.(OperationToken))
-		case BracketToken:
-			if token == closeBracket {
-				for len(operand) > 0 {
-					args, arg1 = args.Pop()
-					args, arg2 = args.Pop()
-					if _, ok := arg2.(BracketToken); ok {
-						args = args.Push(arg1)
-						break
-					}
-					args = args.Push(arg2)
-					args = args.Push(arg1)
-					consume()
+		switch token.kind {
+		case numeric:
+			postfix = append(postfix, token)
+		case operation:
+			for !stack.Empty() {
+				stackToken := stack.Peek()
+				if stackToken.kind == operation && precedence[stackToken.value] >= precedence[token.value] {
+					postfix = append(postfix, stack.Pop())
+				} else {
+					break
 				}
-			} else if token == openBracket {
-				args = append(args, token)
-			} else {
-				panic(token)
 			}
-		default:
-			panic(token)
+			stack.Push(token)
+		case bracket:
+			if token.value == openBracket {
+				stack.Push(token)
+			} else {
+				for !stack.Empty() && stack.Peek().kind != bracket {
+					postfix = append(postfix, stack.Pop())
+				}
+				if !stack.Empty() {
+					stack.Pop()
+				}
+			}
 		}
 	}
-	for len(operand) > 0 {
-		consume()
+	for !stack.Empty() {
+		postfix = append(postfix, stack.Pop())
 	}
-
-	return args[len(args)-1].Int()
+	return
 }
-
-var digits = []byte(`0123456789`)
-var digitByteToToken = map[byte]NumericToken{}
-var digitTokenToString = map[NumericToken]string{}
-
-var parenthesisByteToToken = map[byte]BracketToken{"("[0]: openBracket, ")"[0]: closeBracket}
-var parenthesesTokenToString = map[BracketToken]string{openBracket: "(", closeBracket: ")"}
-var operationByteToToken = map[byte]OperationToken{"+"[0]: plus, "-"[0]: minus}
-var operationsTokenToString = map[OperationToken]string{plus: "+", minus: "-", unaryMinus: "@"}
-
-func init() {
-	var char byte
-	for _, char = range digits {
-		token := toNumber(char)
-		digitByteToToken[char] = token
-		digitTokenToString[token] = string(char)
+func calcPostfix(tokens []Token) int {
+	var stack Stack
+	for _, token := range tokens {
+		if token.kind == operation {
+			stack.Push(Token{numeric, do[token.value](stack.Pop().value, stack.Pop().value)})
+		} else {
+			stack.Push(token)
+		}
 	}
-
+	if stack.Size() != 1 {
+		log.Panicln("Incorrect tokens", stack)
+	}
+	return int(stack.Pop().value)
 }
 func calculate(s string) int {
-	println(s)
-	var tokens = tokenize(s)
+	fmt.Println(s)
+	tokens := tokenize(s)
 	fmt.Println(tokens)
-	return calcInfix(tokens)
+	tokens = convertPostfix(tokens)
+	fmt.Println(tokens)
+	return calcPostfix(tokens)
 }
 
-//func Solve() {
-//	fmt.Println(calculate(
-//		"1-2-3",
-//	))
+type Stack struct {
+	data []Token
+}
+
+func (stack *Stack) Push(v Token) {
+	stack.data = append(stack.data, v)
+}
+
+func (stack *Stack) Pop() (popped Token) {
+	popped = stack.data[len(stack.data)-1]
+	stack.data = stack.data[:len(stack.data)-1]
+	return
+}
+
+func (stack *Stack) Peek() Token {
+	return stack.data[len(stack.data)-1]
+}
+func (stack *Stack) Empty() bool {
+	return len(stack.data) == 0
+}
+func (stack *Stack) Size() int {
+	return len(stack.data)
+}
+
+//func main() {
+//	a := calculate(" 3+5 / 2 ")
+//	fmt.Println(a)
 //}

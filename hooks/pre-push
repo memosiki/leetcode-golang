@@ -1,1 +1,0 @@
-(cd $(git rev-parse --git-dir)/..; make check-readme)
